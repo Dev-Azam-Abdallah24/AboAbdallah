@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحاضرة الرابعة: العملاء الأذكياء - الذكاء الاصطناعي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            --light-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --success-gradient: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            --warning-gradient: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+            --danger-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            --info-gradient: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+            
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --text-light: #ffffff;
+            --bg-light: #f8f9fa;
+            --border-color: #e9ecef;
+            --shadow-light: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-medium: 0 5px 25px rgba(0,0,0,0.15);
+            --shadow-heavy: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.8;
+            color: var(--text-primary);
+            background: var(--light-gradient);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            background: var(--accent-gradient);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="50" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="30" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .hero-content {
+            text-align: center;
+            color: var(--text-light);
+            z-index: 2;
+            position: relative;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: slideInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: slideInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.8;
+            animation: slideInUp 1s ease-out 0.4s both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+        }
+
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent-gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Agent Types Hierarchy */
+        .agent-hierarchy {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 50px 0;
+        }
+
+        .agent-level {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-light);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .agent-level:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .agent-level::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            border-radius: 0 15px 15px 0;
+        }
+
+        .agent-level:nth-child(1)::before { background: var(--success-gradient); }
+        .agent-level:nth-child(2)::before { background: var(--info-gradient); }
+        .agent-level:nth-child(3)::before { background: var(--warning-gradient); }
+        .agent-level:nth-child(4)::before { background: var(--danger-gradient); }
+
+        .agent-level h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .agent-level p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* PEAS Table */
+        .peas-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+            margin: 40px 0;
+        }
+
+        .peas-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .peas-table th {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .peas-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .peas-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .peas-table tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+
+        /* Environment Types */
+        .env-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .env-type {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+            border-right: 4px solid transparent;
+        }
+
+        .env-type:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+            border-right-color: #667eea;
+        }
+
+        .env-type h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .env-type .vs {
+            color: #667eea;
+            font-weight: 600;
+            margin: 0 10px;
+        }
+
+        .env-type p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Examples Section */
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .example-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--secondary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .example-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .example-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .example-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .example-features {
+            list-style: none;
+        }
+
+        .example-features li {
+            padding: 5px 0;
+            color: var(--text-secondary);
+            position: relative;
+            padding-right: 20px;
+        }
+
+        .example-features li::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'كود';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            background: var(--accent-gradient);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .code-block pre {
+            margin-top: 30px;
+            line-height: 1.5;
+        }
+
+        /* Mathematical Formulas */
+        .formula {
+            background: var(--light-gradient);
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .formula::before {
+            content: '🧮';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 40px 15px;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-gradient);
+            color: var(--text-light);
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .footer-description {
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-stamp {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            font-weight: 600;
+            margin-top: 20px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .footer-copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">🤖 الذكاء الاصطناعي</div>
+            <ul class="nav-links">
+                <li><a href="home.html">الرئيسية</a></li>
+                <li><a href="lecture1.html">المحاضرة الأولى</a></li>
+                <li><a href="lecture2.html">المحاضرة الثانية</a></li>
+                <li><a href="ai_lecture_with_images.html">المحاضرة الثالثة</a></li>
+                <li><a href="lecture4.html" class="active">المحاضرة الرابعة</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">العملاء الأذكياء</h1>
+            <p class="hero-subtitle">Intelligent Agents</p>
+            <p class="hero-description">
+                استكشف عالم العملاء الأذكياء في الذكاء الاصطناعي، من المفاهيم الأساسية إلى التطبيقات المتقدمة.
+                تعلم كيفية تصميم وبناء أنظمة ذكية قادرة على الإدراك والتفكير واتخاذ القرارات في بيئات معقدة.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Introduction Section -->
+        <section class="section animate-on-scroll">
+            <h2 class="section-title">مقدمة في العملاء الأذكياء</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🤖</div>
+                    <h3 class="card-title">ما هو العميل؟</h3>
+                    <p class="card-description">
+                        العميل هو أي كيان يمكن اعتباره يدرك بيئته من خلال أجهزة الاستشعار ويتصرف بناءً على تلك البيئة من خلال المشغلات. 
+                        يشمل ذلك البشر والروبوتات والبرامج الحاسوبية.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">👁️</div>
+                    <h3 class="card-title">أجهزة الاستشعار</h3>
+                    <p class="card-description">
+                        هي الوسائل التي يدرك بها العميل بيئته. للإنسان: العينان والأذنان. للروبوت: الكاميرات والميكروفونات. 
+                        للبرنامج: مدخلات لوحة المفاتيح ومحتوى الملفات.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h3 class="card-title">المشغلات</h3>
+                    <p class="card-description">
+                        هي الوسائل التي يتصرف بها العميل في بيئته. للإنسان: الأيدي والأرجل. للروبوت: المحركات والأذرع الروبوتية. 
+                        للبرنامج: مخرجات الشاشة وتعديل الملفات.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agent Function Section -->
+        <section class="section animate-on-scroll">
+            <h2 class="section-title">دالة العميل وبرنامج العميل</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h3 class="card-title">دالة العميل</h3>
+                    <p class="card-description">
+                        مفهوم رياضي مجرد يصف سلوك العميل. ترسم خريطة من تسلسل جميع الإدراكات الممكنة إلى مجموعة الإجراءات.
+                    </p>
+                    <div class="formula">
+                        a = f(p*) حيث f: P* → A
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">💻</div>
+                    <h3 class="card-title">برنامج العميل</h3>
+                    <p class="card-description">
+                        التنفيذ الملموس لدالة العميل لنظام مادي معين. هو الكود الفعلي الذي يعمل على العميل.
+                        العميل = البنية (الجهاز) + برنامج العميل.
+                    </p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre>
+function Vacuum-Agent([location, status]) returns an action
+  if status == Dirty then return Suck
+  else if location == A then return Right
+  else if location == B then return Left
+                </pre>
+            </div>
+        </section>
+
+        <!-- Vacuum World Example -->
+        <section class="section animate-on-scroll">
+            <h2 class="section-title">مثال: عالم المكنسة الكهربائية</h2>
+            <div class="peas-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الحالة #</th>
+                            <th>موقع العميل</th>
+                            <th>حالة الغرفة A</th>
+                            <th>حالة الغرفة B</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>A</td><td>متسخة</td><td>متسخة</td></tr>
+                        <tr><td>2</td><td>A</td><td>متسخة</td><td>نظيفة</td></tr>
+                        <tr><td>3</td><td>A</td><td>نظيفة</td><td>متسخة</td></tr>
+                        <tr><td>4</td><td>A</td><td>نظيفة</td><td>نظيفة</td></tr>
+                        <tr><td>5</td><td>B</td><td>متسخة</td><td>متسخة</td></tr>
+                        <tr><td>6</td><td>B</td><td>متسخة</td><td>نظيفة</td></tr>
+                        <tr><td>7</td><td>B</td><td>نظيفة</td><td>متسخة</td></tr>
+                        <tr><td>8</td><td>B</td><td>نظيفة</td><td>نظيفة</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="text-align: center; color: var(--text-secondary); margin-top: 20px;">
+                العدد الإجمالي للحالات: 2 (مواقع) × 2 (حالة A) × 2 (حالة B) = 8 حالات
+            </p>
+        </section>
+
+        <!-- Rational Agents Section -->
+        <section class="section animate-on-scroll">
+            <h2 class="section-title">العملاء العقلانيون</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3 class="card-title">تعريف العميل العقلاني</h3>
+                    <p class="card-description">
+                        "لكل تسلسل إدراك ممكن، يجب على العميل العقلاني اختيار إجراء يزيد من مقياس أدائه المتوقع، 
+                        بالنظر إلى الأدلة المقدمة من تسلسل الإدراك والمعرفة المدمجة للعميل."
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📈</div>
+                    <h3 class="card-title">مقياس الأداء</h3>
+                    <p class="card-description">
+                        معيار موضوعي لنجاح سلوك العميل (دالة المنفعة أو دالة المكافأة). 
+                        يحدد مدى جودة أداء العميل في بيئته.
+                    </p>
+                    <div class="formula">
+                        a = argmax E[U(a)]
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🧠</div>
+                    <h3 class="card-title">خصائص العقلانية</h3>
+                    <p class="card-description">
+                        العقلانية مثالية، ليست معرفة مطلقة أو كمالاً. العملاء العقلانيون يزيدون من النتائج المتوقعة، 
+                        ومن العقلاني الاستكشاف والتعلم.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PEAS Section -->
+        <section class="section animate-on-scroll">
+            <h2 class="section-title">مواصفات المشكلة: PEAS</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🏆</div>
+                    <h3 class="card-title">Performance (مقياس الأداء)</h3>
+                    <p class="card-description">يحدد المنفعة وما هو متاح للعميل</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌍</div>
+                    <h3 class="card-title">Environment (البيئة)</h3>
+                    <p class="card-description">تحدد المكونات وقواعد كيفية تأثير الإجراءات على البيئة</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔧</div>
+                    <h3 class="card-title">Actuators (المشغلات)</h3>
+                    <p class="card-description">تحدد الإجراءات العقلانية</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📡</div>
+                    <h3 class="card-title">Sensors (أجهزة الاستشعار)</h3>
+                    <p class="card-description">تحدد الإدراكات</p>
+                </div>
+            </div>
+
+            <h3 style="text-align: center; margin: 40px 0 20px; font-size: 1.5rem; color: var(--text-primary);">
+                مثال: سائق سيارة أجرة آلي
+            </h3>
+            <div class="peas-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>مقياس الأداء</th>
+                            <th>البيئة</th>
+                            <th>المشغلات</th>
+                            <th>أجهزة الاستشعار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                • آمن<br>
+                                • سريع<br>
+                                • قانوني<br>
+                                • رحلة مريحة<br>
+                                • تعظيم الأرباح
+                            </td>
+                            <td>
+                                • طرق<br>
+                                • حركة مرور أخرى<br>
+                                • مشاة<br>
+                                • عملاء
+                            </td>
+                            <td>
+                                • عجلة القيادة<br>
+                                • دواسة الوقود<br>
+                                • الفرامل<br>
+                                • إشارة<br>
+                                • بوق<br>
+                                • محرك<br>
+                                • لوحة مفاتيح
+                            </td>
+                            <td>
+                                • كاميرات<br>
+                                • سونار<br>
+                                • عداد السرعة<br>
+                                • GPS<br>
+                                • عداد المسافات<br>
+                                • حساسات المحرك
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Environment Types Section -->
+        <section class="section animate-on-scroll">
+            <h2 class="section-title">أنواع البيئات</h2>
+            <div class="env-types">
+                <div class="env-type">
+                    <h4>قابلة للملاحظة بالكامل <span class="vs">مقابل</span> قابلة للملاحظة جزئياً</h4>
+                    <p>
+                        <strong>بالكامل:</strong> أجهزة استشعار العميل تمنحه وصولاً كاملاً إلى حالة البيئة.<br>
+                        <strong>جزئياً:</strong> العميل لا يمكنه رؤية جميع جوانب البيئة.
+                    </p>
+                </div>
+                <div class="env-type">
+                    <h4>حتمية <span class="vs">مقابل</span> عشوائية</h4>
+                    <p>
+                        <strong>حتمية:</strong> التغييرات تتحدد بالكامل من الحالة الحالية والإجراء.<br>
+                        <strong>عشوائية:</strong> لا يمكن تحديد التغييرات (يوجد بعض العشوائية).
+                    </p>
+                </div>
+                <div class="env-type">
+                    <h4>معروفة <span class="vs">مقابل</span> غير معروفة</h4>
+                    <p>
+                        <strong>معروفة:</strong> العميل يعرف قواعد البيئة ويمكنه التنبؤ بنتيجة الإجراءات.<br>
+                        <strong>غير معروفة:</strong> العميل لا يمكنه التنبؤ بنتيجة الإجراءات.
+                    </p>
+                </div>
+                <div class="env-type">
+                    <h4>ثابتة <span class="vs">مقابل</span> ديناميكية</h4>
+                    <p>
+                        <strong>ثابتة:</strong> البيئة لا تتغير بينما يقوم العميل بالتفكير.<br>
+                        <strong>ديناميكية:</strong> البيئة تتغير بينما يقوم العميل بالتفكير.
+                    </p>
+                </div>
+                <div class="env-type">
+                    <h4>منفصلة <span class="vs">مقابل</span> مستمرة</h4>
+                    <p>
+                        <strong>منفصلة:</strong> عدد ثابت من الإدراكات والإجراءات والحالات المميزة.<br>
+                        <strong>مستمرة:</strong> الإدراكات والإجراءات ومتغيرات الحالة مستمرة.
+                    </p>
+                </div>
+                <div class="env-type">
+                    <h4>عرضية <span class="vs">مقابل</span> متسلسلة</h4>
+                    <p>
+                        <strong>عرضية:</strong> اختيار العميل للإجراء في حلقة لا يؤثر على الحلقات التالية.<br>
+                        <strong>متسلسلة:</strong> الإجراءات الآن تؤثر على النتائج لاحقاً.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agent Types Hierarchy -->
+        <section class="section animate-on-scroll">
+            <h2 class="section-title">تسلسل هرمي لأنواع العملاء</h2>
+            <div class="agent-hierarchy">
+                <div class="agent-level">
+                    <h3>1. العملاء الانعكاسيون البسيطون (Simple Reflex Agents)</h3>
+                    <p>
+                        يستخدمون فقط المعرفة المدمجة في شكل قواعد تختار الإجراء بناءً على الإدراك الحالي فقط. 
+                        سريع جداً ولكن لا يحتاج إلى ذاكرة. مثال: مكنسة كهربائية بسيطة.
+                    </p>
+                    <div class="formula">a = f(p)</div>
+                </div>
+                <div class="agent-level">
+                    <h3>2. العملاء الانعكاسيون القائمون على النموذج (Model-based Reflex Agents)</h3>
+                    <p>
+                        يحافظ على متغير حالة لتتبع جوانب البيئة التي لا يمكن ملاحظتها حالياً. 
+                        لديه ذاكرة ويعرف كيف تتفاعل البيئة مع الإجراءات.
+                    </p>
+                    <div class="formula">s' = T(s, a), a = f(p, s)</div>
+                </div>
+                <div class="agent-level">
+                    <h3>3. العملاء القائمون على الهدف (Goal-based Agents)</h3>
+                    <p>
+                        لدى العميل مهمة للوصول إلى حالة هدف محددة. يستخدم خوارزميات البحث لتخطيط الإجراءات 
+                        التي تؤدي إلى الهدف. مثال: حل الألغاز.
+                    </p>
+                    <div class="formula">a = argmin Σ c_t | s_T ∈ S_goal</div>
+                </div>
+                <div class="agent-level">
+                    <h3>4. العملاء القائمون على المنفعة (Utility-based Agents)</h3>
+                    <p>
+                        يستخدم دالة منفعة لتقييم مدى استصواب كل حالة ممكنة. يختار الإجراءات للبقاء في حالات مرغوبة. 
+                        مثال: مسبار المريخ المستقل.
+                    </p>
+                    <div class="formula">a = argmax E[Σ γ^t * r_t]</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modern Vacuum Robot Example -->
+        <section class="section animate-on-scroll">
+            <h2 class="section-title">مثال عملي: روبوت المكنسة الكهربائية الحديثة</h2>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h3 class="example-title">🗺️ الرسم الخرائطي الذكي والملاحة</h3>
+                    <p class="example-description">
+                        يستخدم تقنية iAdapt 2.0 Navigation مع تحديد الموقع البصري للملاحة الفعالة في المنزل وإنشاء خرائط للبيئة.
+                    </p>
+                </div>
+                <div class="example-card">
+                    <h3 class="example-title">🧹 نظام تنظيف متقدم</h3>
+                    <p class="example-description">
+                        نظام تنظيف ثلاثي المراحل بفرشاة مطاطية مزدوجة، وفرشاة كنس الحواف، وفلتر عالي الكفاءة.
+                    </p>
+                </div>
+                <div class="example-card">
+                    <h3 class="example-title">📱 اتصال Wi-Fi والتحكم عبر التطبيق</h3>
+                    <p class="example-description">
+                        يتصل بشبكة Wi-Fi المنزلية للتحكم عن بعد عبر تطبيق iRobot HOME مع إمكانية الجدولة والتخصيص.
+                    </p>
+                </div>
+                <div class="example-card">
+                    <h3 class="example-title">🎤 التحكم الصوتي</h3>
+                    <p class="example-description">
+                        متوافق مع Amazon Alexa و Google Assistant للتشغيل بدون استخدام اليدين.
+                    </p>
+                </div>
+                <div class="example-card">
+                    <h3 class="example-title">🔋 إعادة الشحن والاستئناف</h3>
+                    <p class="example-description">
+                        يعود إلى قاعدة الشحن لإعادة الشحن ويستأنف التنظيف حتى الانتهاء تلقائياً.
+                    </p>
+                </div>
+                <div class="example-card">
+                    <h3 class="example-title">🚫 اكتشاف الهاوية والأوساخ</h3>
+                    <p class="example-description">
+                        مستشعرات تتجنب السقوط وتكتشف تركيز الأوساخ للتنظيف المستهدف والفعال.
+                    </p>
+                </div>
+            </div>
+
+            <h3 style="text-align: center; margin: 40px 0 20px; font-size: 1.5rem; color: var(--text-primary);">
+                وصف PEAS لروبوت المكنسة الكهربائية الحديثة
+            </h3>
+            <div class="peas-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>مقياس الأداء</th>
+                            <th>البيئة</th>
+                            <th>المشغلات</th>
+                            <th>أجهزة الاستشعار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                • نظافة الأرضيات<br>
+                                • كفاءة التنظيف<br>
+                                • استهلاك الطاقة<br>
+                                • عمر البطارية<br>
+                                • تجنب العوائق<br>
+                                • سهولة الاستخدام
+                            </td>
+                            <td>
+                                • المنزل (الغرف، الأثاث)<br>
+                                • الأوساخ والغبار<br>
+                                • قاعدة الشحن<br>
+                                • شبكة Wi-Fi<br>
+                                • المستخدم<br>
+                                • أجهزة ذكية أخرى
+                            </td>
+                            <td>
+                                • عجلات (للحركة)<br>
+                                • فرشاة كنس الحواف<br>
+                                • فرشاة رئيسية<br>
+                                • مروحة شفط<br>
+                                • مكبر صوت<br>
+                                • أضواء مؤشرة<br>
+                                • راديو Wi-Fi
+                            </td>
+                            <td>
+                                • مستشعرات الاصطدام<br>
+                                • مستشعرات الهاوية<br>
+                                • مستشعرات الأوساخ<br>
+                                • كاميرا (للرسم الخرائطي)<br>
+                                • مستشعرات الأشعة تحت الحمراء<br>
+                                • مستشعرات تحديد الموقع<br>
+                                • ميكروفون
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" style="margin-top: 30px; background: var(--light-gradient);">
+                <div class="card-icon">🤖</div>
+                <h3 class="card-title">نوع العميل الذكي</h3>
+                <p class="card-description">
+                    روبوت المكنسة الكهربائية الحديثة هو مثال معقد يجمع بين عدة أنواع من العملاء:
+                </p>
+                <ul class="example-features">
+                    <li><strong>عميل انعكاسي قائم على النموذج:</strong> يحتفظ بخريطة داخلية للبيئة</li>
+                    <li><strong>عميل قائم على الهدف:</strong> هدفه تنظيف المنزل بالكامل</li>
+                    <li><strong>عميل قائم على المنفعة:</strong> يحسن أداءه بناءً على مقاييس متعددة</li>
+                    <li><strong>عميل يتعلم:</strong> يحسن خرائطه وكفاءة التنظيف بمرور الوقت</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Learning Agents Section -->
+        <section class="section animate-on-scroll">
+            <h2 class="section-title">العملاء الذين يتعلمون</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h3 class="card-title">عنصر التعلم</h3>
+                    <p class="card-description">
+                        يعدل برنامج العميل (سواء كان انعكاسياً، أو قائماً على الهدف، أو قائماً على المنفعة) لتحسين أدائه.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔍</div>
+                    <h3 class="card-title">مراقبة الأداء</h3>
+                    <p class="card-description">
+                        كيف يؤدي العميل حالياً؟ يراقب الأداء ويقيم مدى نجاح العميل في تحقيق أهدافه.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3 class="card-title">تحديث عنصر الأداء</h3>
+                    <p class="card-description">
+                        يحدث كيفية اختيار عنصر الأداء للإجراءات ويعدل برنامج العميل بناءً على التعلم.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🚀</div>
+                    <h3 class="card-title">توليد إجراءات الاستكشاف</h3>
+                    <p class="card-description">
+                        يولد إجراءات للاستكشاف وتجربة أشياء جديدة لتحسين الأداء والتعلم من التجارب.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3 class="footer-title">المحاضرة الرابعة: العملاء الأذكياء</h3>
+            <p class="footer-description">
+                شرح شامل ومفصل لمفاهيم العملاء الأذكياء في الذكاء الاصطناعي، من المبادئ الأساسية إلى التطبيقات المتقدمة
+            </p>
+            <div class="footer-stamp">
+                ✨ تم بواسطة اللجنة العلمية لعلوم الحاسوب 24 ✨
+            </div>
+            <div class="footer-copyright">
+                جميع الحقوق محفوظة © 2025 - تم إنشاء هذا المحتوى لأغراض تعليمية
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with animate-on-scroll class
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add stagger animation to cards
+        document.querySelectorAll('.cards-grid').forEach(grid => {
+            const cards = grid.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('fade-in');
+            });
+        });
+
+        // Add stagger animation to environment types
+        document.querySelectorAll('.env-types .env-type').forEach((type, index) => {
+            type.style.animationDelay = `${index * 0.1}s`;
+            type.classList.add('fade-in');
+        });
+
+        // Add stagger animation to agent hierarchy
+        document.querySelectorAll('.agent-hierarchy .agent-level').forEach((level, index) => {
+            level.style.animationDelay = `${index * 0.2}s`;
+            level.classList.add('fade-in');
+        });
+
+        // Add stagger animation to examples
+        document.querySelectorAll('.examples-grid .example-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('fade-in');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add hover effects to cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add click effects to buttons and interactive elements
+        document.querySelectorAll('.card, .example-card, .env-type, .agent-level').forEach(element => {
+            element.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Add typing effect to hero title
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect when page loads
+        window.addEventListener('load', function() {
+            const heroTitle = document.querySelector('.hero-title');
+            if (heroTitle) {
+                const originalText = heroTitle.textContent;
+                setTimeout(() => {
+                    typeWriter(heroTitle, originalText, 150);
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
+
